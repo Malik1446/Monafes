@@ -23,3 +23,8 @@ module.exports = (sequelize, DataTypes) => {
   });
   return Test;
 };
+describe('Sanity check', () => {
+  test('true is truthy', () => {
+    expect(true).toBe(true);
+  });
+});

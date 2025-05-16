@@ -39,3 +39,13 @@ model Question {
   askedBy    Student  @relation(fields: [studentId], references: [id])
   studentId  Int
 }
+
+model User {
+  id        Int      @id @default(autoincrement())
+  name      String
+  email     String   @unique
+  schoolId  Int
+  password  String
+  createdAt DateTime @default(now())
+}
+
