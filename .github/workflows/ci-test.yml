@@ -1,7 +1,11 @@
+# .github/workflows/ci-test.yml
 name: CI Test Secondary
 
-# يمكن تشغيله يدويًا من تبويب Actions
 on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
   workflow_dispatch:
 
 jobs:
@@ -9,22 +13,18 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # 1) جلب الكود من المستودع مع كامل التاريخ
       - name: Checkout repository
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
 
-      # 2) ضبط نسخة Node.js
       - name: Use Node.js
         uses: actions/setup-node@v3
         with:
           node-version: '18'
 
-      # 3) تثبيت التبعيات
       - name: Install dependencies
         run: npm install
 
-      # 4) تشغيل الاختبارات
       - name: Run tests
         run: npm test
