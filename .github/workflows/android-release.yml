@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      # تأكد أن applicationId في build.gradle يساوي هذا
+      # هذا يجب أن يتطابق مع applicationId في build.gradle
       APP_ID: com.nafesapp
 
     steps:
