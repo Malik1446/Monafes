@@ -11,24 +11,21 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      # تأكد أن applicationId في build.gradle يساوي هذا
+      # هذا يجب أن يتطابق مع applicationId في build.gradle
       APP_ID: com.nafesapp
 
     steps:
-      # 1. استنساخ المستودع
       - name: Checkout repository
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
 
-      # 2. تجهيز JDK 11
       - name: Set up JDK 11
         uses: actions/setup-java@v3
         with:
           distribution: 'temurin'
           java-version: '11'
 
-      # 3. تخزين ذاكرة Gradle مؤقتًا
       - name: Cache Gradle dependencies
         uses: actions/cache@v3
         with:
@@ -39,20 +36,18 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-gradle-
 
-      # 4. منح صلاحية تنفيذ gradlew
       - name: Grant execute permission for gradlew
         run: chmod +x mobile/NafesMobile/android/gradlew
 
-      # 5. بناء ملف الـAPK بصيغة الإصدار (release)
       - name: Build Release APK
         working-directory: mobile/NafesMobile/android
         run: |
           ./gradlew clean
           ./gradlew assembleRelease
 
-      # 6. رفع الأرتيفاكت (ملف الـAPK الناتج)
       - name: Upload APK Artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v3    # ← هنا تأكد أن هذا السطر يبدأ بمسافتين تحت "steps:" ثم بمسافتين إضافيتين تحت "- name: Upload APK Artifact"
         with:
-          name: nafes-release-apk
+          name: nafes-release-apk            # ← هنا تأكد أن هذا السطر يبدأ بأربع مسافات إضافية تحت "uses:"
           path: mobile/NafesMobile/android/app/build/outputs/apk/release/app-release.apk
+                                            # ← وهنا أيضاً أربع مسافات إضافية قبل "path:"
