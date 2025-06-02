@@ -1,0 +1,23 @@
+name: Test Upload Artifact
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  test_upload:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Create dummy file
+        run: echo "Hello from CI" > test-ci.txt
+
+      - name: Upload dummy artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: dummy-artifact
+          path: test-ci.txt
