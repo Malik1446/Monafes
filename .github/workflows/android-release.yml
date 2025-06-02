@@ -45,9 +45,8 @@ jobs:
           ./gradlew clean
           ./gradlew assembleRelease
 
-      - name: Upload APK Artifact
-        uses: actions/upload-artifact@v3    # ← هنا تأكد أن هذا السطر يبدأ بمسافتين تحت "steps:" ثم بمسافتين إضافيتين تحت "- name: Upload APK Artifact"
-        with:
-          name: nafes-release-apk            # ← هنا تأكد أن هذا السطر يبدأ بأربع مسافات إضافية تحت "uses:"
-          path: mobile/NafesMobile/android/app/build/outputs/apk/release/app-release.apk
-                                            # ← وهنا أيضاً أربع مسافات إضافية قبل "path:"
+      - name: Upload APK artifact
+  uses: actions/upload-artifact@v3
+  with:
+    name: app-release
+    path: mobile/NafesMobile/android/app/build/outputs/apk/release/app-release.apk
