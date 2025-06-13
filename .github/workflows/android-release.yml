@@ -45,8 +45,7 @@ jobs:
       - name: Build Release APK
         working-directory: android
         run: |
-          ./gradlew clean
-          ./gradlew assembleRelease \
+          ./gradlew clean assembleRelease \
             -Pandroid.injected.signing.store.file=../app/release.keystore \
             -Pandroid.injected.signing.store.password=${{ secrets.ANDROID_KEYSTORE_PASSWORD }} \
             -Pandroid.injected.signing.key.alias=release \
