@@ -53,7 +53,7 @@ jobs:
             -Pandroid.injected.signing.key.password=${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
 
       - name: Upload APK artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v2    # <- عدّلنا من v3 إلى v2
         with:
           name: app-release.apk
           path: android/app/build/outputs/apk/release/app-release.apk
@@ -65,10 +65,7 @@ jobs:
 
     steps:
       - name: Download APK artifact
-        uses: actions/download-artifact@v3
-        with:
-          name: app-release.apk
-          path: .
+        uses: actions/download-artifact@v2
 
       - name: Create Release
         id: create_release
