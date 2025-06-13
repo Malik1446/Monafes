@@ -1,52 +1,128 @@
-﻿name: Monafes
+﻿import React, { useState, useEffect } from 'react';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+import { View, Text, ActivityIndicator, ScrollView } from 'react-native';
 
-on:
-  push:
-    branches:
-      - main
+// Utility to fetch data from API
+async function fetchStats(role) {
+  const endpointMap = {
+    admin: '/api/admin/stats',
+    schoolManager: '/api/school-manager/stats',
+    teacher: '/api/teacher/stats',
+    student: '/api/student/stats',
+  };
+  const res = await fetch(endpointMap[role]);
+  if (!res.ok) throw new Error('Network response was not ok');
+  return res.json();
+}
 
-jobs:
-  build:
-    name: Build APK
-    runs-on: ubuntu-latest
+// Application Admin
+function AdminDashboard() {
+  const [stats, setStats] = useState(null);
+  const [loading, setLoading] = useState(true);
+  useEffect(() => {
+    fetchStats('admin').then(data => {
+      setStats(data);
+      setLoading(false);
+    }).catch(() => setLoading(false));
+  }, []);
+  if (loading) return <ActivityIndicator style={{ flex: 1 }} />;
+  return (
+    <ScrollView className="p-4 bg-white flex-1">
+      <Text className="text-xl font-bold text-right mb-4">منافس - لوحة الحكم</Text>
+      {stats.map((c, i) => (
+        <View key={i} className="bg-gray-200 rounded-lg p-4 mb-3 flex-row justify-between">
+          <Text className="text-right">{c.label}</Text>
+          <Text className="text-right font-bold">{c.value}</Text>
+        </View>
+      ))}
+    </ScrollView>
+  );
+}
 
-    env:
-      # هذا يجب أن يتطابق مع applicationId في build.gradle
-      APP_ID: com.nafesapp
+// School Manager
+function SchoolManagerDashboard() {
+  const [stats, setStats] = useState(null);
+  const [loading, setLoading] = useState(true);
+  useEffect(() => {
+    fetchStats('schoolManager').then(data => {
+      setStats(data);
+      setLoading(false);
+    }).catch(() => setLoading(false));
+  }, []);
+  if (loading) return <ActivityIndicator style={{ flex: 1 }} />;
+  return (
+    <ScrollView className="p-4 bg-white flex-1">
+      <Text className="text-xl font-bold text-right mb-4">منافس - مدير المدرسة</Text>
+      {stats.map((c, i) => (
+        <View key={i} className="bg-gray-100 rounded-lg p-4 mb-3 flex-row justify-between">
+          <Text className="text-right">{c.label}</Text>
+          <Text className="text-right font-bold">{c.value}</Text>
+        </View>
+      ))}
+    </ScrollView>
+  );
+}
 
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
+// Teacher
+function TeacherDashboard() {
+  const [stats, setStats] = useState(null);
+  const [loading, setLoading] = useState(true);
+  useEffect(() => {
+    fetchStats('teacher').then(data => {
+      setStats(data);
+      setLoading(false);
+    }).catch(() => setLoading(false));
+  }, []);
+  if (loading) return <ActivityIndicator style={{ flex: 1 }} />;
+  return (
+    <ScrollView className="p-4 bg-white flex-1">
+      <Text className="text-xl font-bold text-right mb-4">منافس - المعلم</Text>
+      {stats.map((c, i) => (
+        <View key={i} className="bg-gray-100 rounded-lg p-4 mb-3 flex-row justify-between">
+          <Text className="text-right">{c.label}</Text>
+          <Text className="text-right font-bold">{c.value}</Text>
+        </View>
+      ))}
+    </ScrollView>
+  );
+}
 
-      - name: Set up JDK 11
-        uses: actions/setup-java@v3
-        with:
-          distribution: 'temurin'
-          java-version: '11'
+// Student
+function StudentDashboard() {
+  const [stats, setStats] = useState(null);
+  const [loading, setLoading] = useState(true);
+  useEffect(() => {
+    fetchStats('student').then(data => {
+      setStats(data);
+      setLoading(false);
+    }).catch(() => setLoading(false));
+  }, []);
+  if (loading) return <ActivityIndicator style={{ flex: 1 }} />;
+  return (
+    <ScrollView className="p-4 bg-white flex-1">
+      <Text className="text-xl font-bold text-right mb-4">منافس - الطالب</Text>
+      {stats.map((c, i) => (
+        <View key={i} className="bg-orange-200 rounded-lg p-4 mb-3 flex-row justify-between">
+          <Text className="text-right">{c.label}</Text>
+          <Text className="text-right font-bold">{c.value}</Text>
+        </View>
+      ))}
+    </ScrollView>
+  );
+}
 
-      - name: Cache Gradle dependencies
-        uses: actions/cache@v3
-        with:
-          path: |
-            ~/.gradle/caches
-            ~/.gradle/wrapper
-          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
-          restore-keys: |
-            ${{ runner.os }}-gradle-
-
-      - name: Grant execute permission for gradlew
-        run: chmod +x mobile/NafesMobile/android/gradlew
-
-      - name: Build Release APK
-        working-directory: mobile/NafesMobile/android
-        run: |
-          ./gradlew clean
-          ./gradlew assembleRelease
-
-      - name: Upload APK artifact
-- uses: actions/upload-artifact@v3
-  with:
-    name: apk-release
-    path: path/to/your/apk
+// Navigation Setup
+const Stack = createStackNavigator();
+export default function App() {
+  return (
+    <NavigationContainer>
+      <Stack.Navigator headerMode="none">
+        <Stack.Screen name="AdminDashboard" component={AdminDashboard} />
+        <Stack.Screen name="SchoolManagerDashboard" component={SchoolManagerDashboard} />
+        <Stack.Screen name="TeacherDashboard" component={TeacherDashboard} />
+        <Stack.Screen name="StudentDashboard" component={StudentDashboard} />
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+}
