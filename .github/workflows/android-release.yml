@@ -41,6 +41,17 @@ jobs:
           mkdir -p android
           echo "$KEYSTORE_BASE64" | base64 --decode > android/release.keystore
 
+      - name: Debug: list Android folder
+        run: |
+          echo "Contents of mobile/:"
+          ls -R mobile/
+          echo ""
+          echo "Contents of mobile/android/:"
+          ls -R mobile/android/
+          echo ""
+          echo "Contents of ./:"
+          ls -R .
+
       - name: Grant execute permission for gradlew
         run: chmod +x mobile/android/gradlew
 
