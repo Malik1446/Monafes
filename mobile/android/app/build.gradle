@@ -11,8 +11,14 @@ if (keystorePropsFile.exists()) {
     }
 }
 
+apply plugin: "com.android.application"
+apply plugin: "com.facebook.react"
+
+// قد تحتاج الاستيرادات الأخرى هنا
+
 android {
     compileSdkVersion 33
+
     defaultConfig {
         applicationId "com.munafis.app"
         minSdkVersion 21
@@ -35,13 +41,17 @@ android {
             signingConfig signingConfigs.release
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            // يمكنك تفعيل minifyEnabled true إذا احتجت لتقليل حجم الـ APK
+        }
+        debug {
+            // debug يبقى كما هو
         }
     }
 
-    // بقية إعدادات android (flavorDimensions، productFlavors، إلخ)
+    // بقية إعدادات android مثل flavorDimensions أو productFlavors إذا كنت تستخدمها
 }
 
 dependencies {
-    implementation 'com.facebook.react:react-native:+'  // مثال
-    // بقية dependencies
+    implementation 'com.facebook.react:react-native:+'  // تأكد من إصدار React Native الصحيح
+    // أضف هنا باقي الاعتمادات (dependencies) الخاصة بمشروعك
 }
