@@ -1,0 +1,47 @@
+// في أعلى الملف
+import java.util.Properties
+
+// تحميل خصائص keystore
+def keystorePropsFile = rootProject.file('release-keystore.properties')
+if (keystorePropsFile.exists()) {
+    Properties keystoreProps = new Properties()
+    keystoreProps.load(new FileInputStream(keystorePropsFile))
+    keystoreProps.each { prop, value ->
+        project.ext[prop] = value
+    }
+}
+
+android {
+    compileSdkVersion 33
+    defaultConfig {
+        applicationId "com.munafis.app"
+        minSdkVersion 21
+        targetSdkVersion 33
+        versionCode 1
+        versionName "1.0"
+    }
+
+    signingConfigs {
+        release {
+            keyAlias 'release'
+            keyPassword project.KEYSTORE_PASSWORD
+            storeFile file("../release.keystore")
+            storePassword project.KEYSTORE_PASSWORD
+        }
+    }
+
+    buildTypes {
+        release {
+            signingConfig signingConfigs.release
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    // بقية إعدادات android (flavorDimensions، productFlavors، إلخ)
+}
+
+dependencies {
+    implementation 'com.facebook.react:react-native:+'  // مثال
+    // بقية dependencies
+}
