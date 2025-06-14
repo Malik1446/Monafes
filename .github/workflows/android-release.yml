@@ -30,29 +30,14 @@ jobs:
           path: |
             ~/.gradle/caches
             ~/.gradle/wrapper
-                 - name: Cache Gradle dependencies
-         uses: actions/cache@v3
-         with:
-           path: |
-             ~/.gradle/caches
-             ~/.gradle/wrapper
--          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*','**/gradle-wrapper.properties') }}
--          restore-keys: |
--            ${{ runner.os }}-gradle-
-+          key: "${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*','**/gradle-wrapper.properties') }}"
-+          restore-keys: |
-+            ${{ runner.os }}-gradle-
+          key: "${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*','**/gradle-wrapper.properties') }}"
+          restore-keys: |
+            ${{ runner.os }}-gradle-
 
       - name: Decode release keystore
         env:
           KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
         run: |
-          # تأكد أن المجلد موجود
-        - name: Decode release keystore
-        env:
-          KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
-        run: |
-          # تأكد أن المجلد موجود
           mkdir -p android
           echo "$KEYSTORE_BASE64" | base64 --decode > android/release.keystore
 
@@ -63,17 +48,11 @@ jobs:
         working-directory: android
         run: ./gradlew clean assembleRelease
 
-          ./gradlew clean assembleRelease \
-            -Pandroid.injected.signing.store.file=release.keystore \
-            -Pandroid.injected.signing.store.password=${{ secrets.ANDROID_KEYSTORE_PASSWORD }} \
-            -Pandroid.injected.signing.key.alias=release \
-            -Pandroid.injected.signing.key.password=${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
-
       - name: Upload APK artifact
         uses: actions/upload-artifact@v4
         with:
           name: app-release.apk
-          path: mobile/android/app/build/outputs/apk/release/app-release.apk
+          path: android/app/build/outputs/apk/release/app-release.apk
 
   release:
     name: Create GitHub Release
